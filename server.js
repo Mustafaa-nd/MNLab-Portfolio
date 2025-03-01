@@ -36,7 +36,7 @@ fs.readFile(FILE_PATH, "utf8", (err, data) => {
     achievements = achievements.map((proj) => ({ ...proj, liked: false })); 
 
     fs.writeFile(FILE_PATH, JSON.stringify(achievements, null, 2), "utf8", (err) => {
-      if (!err) console.log("Tous les 'liked' ont été réinitialisés à false !");
+      if (!err) console.log("Tous les 'liked' ont été réinitialisés !");
     });
   }
 });
@@ -172,5 +172,5 @@ app.delete("/achievements/:id", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(` Serveur backend lancé sur http://localhost:${PORT}`);
+  console.log(` Serveur backend lancé !`);
 });
