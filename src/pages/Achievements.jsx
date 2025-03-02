@@ -20,7 +20,7 @@ const Achievements = () => {
   }, []);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/achievements?search=${searchQuery}&category=${category}`)
+    fetch(`https://mnlab-portfolios.onrender.com/achievements?search=${searchQuery}&category=${category}`)
       .then((res) => res.json())
       .then((data) => setAchievementsData(data))
       .catch((error) => console.error("❌ Erreur lors du chargement des données:", error));

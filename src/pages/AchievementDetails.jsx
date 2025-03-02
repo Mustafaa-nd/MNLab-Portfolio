@@ -27,7 +27,7 @@ const AchievementDetails = () => {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:5000/achievements")
+    fetch("https://mnlab-portfolios.onrender.com/achievements")
       .then((res) => res.json())
       .then((data) => {
         const selectedProject = data.find((proj) => proj.id.toString() === id);
@@ -47,7 +47,7 @@ const AchievementDetails = () => {
   const formattedDescription = project.description.replace(/\n/g, "<br />");
 
   const handleEdit = async () => {
-    const response = await fetch(`http://localhost:5000/achievements/${id}`, {
+    const response = await fetch(`https://mnlab-portfolios.onrender.com/achievements/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title: editedTitle, description: editedDescription }),
@@ -62,7 +62,7 @@ const AchievementDetails = () => {
   const handleDelete = async () => {
     if (!window.confirm("Voulez-vous vraiment supprimer ce projet ?")) return;
 
-    const response = await fetch(`http://localhost:5000/achievements/${id}`, {
+    const response = await fetch(`https://mnlab-portfolios.onrender.com/achievements/${id}`, {
       method: "DELETE",
     });
 

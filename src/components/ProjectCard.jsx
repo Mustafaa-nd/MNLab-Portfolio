@@ -10,7 +10,7 @@ const ProjectCard = ({ project, theme }) => {
   
     const fetchLikes = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/achievements`);
+        const response = await fetch(`https://mnlab-portfolios.onrender.com/achievements`);
         if (!response.ok) throw new Error("Erreur lors du chargement des likes");
 
         const achievements = await response.json();
@@ -32,7 +32,7 @@ const ProjectCard = ({ project, theme }) => {
     const action = liked ? "unlike" : "like"; 
 
     try {
-      const response = await fetch(`http://localhost:5000/achievements/${project.id}/like`, {
+      const response = await fetch(`https://mnlab-portfolios.onrender.com/achievements/${project.id}/like`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action }),
@@ -70,7 +70,7 @@ const ProjectCard = ({ project, theme }) => {
           </span>
           <span className="text-lg font-semibold">{likes}</span>
         </div>
-        
+
         {project.category && (
           <span
             className={`px-3 py-1 text-xs font-semibold uppercase rounded-full ${

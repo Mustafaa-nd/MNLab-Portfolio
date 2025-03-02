@@ -7,6 +7,16 @@ import multer from "multer";
 const app = express();
 const PORT = 5000;
 
+
+// Servir les images du dossier src/images
+app.use("/images", express.static("src/images"));
+
+// Servir les fichiers JSON du dossier public/data
+app.use("/data", express.static("public/data"));
+
+// Servir les fichiers uploadés
+app.use("/uploads", express.static("src/upload"));
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static("uploads"));

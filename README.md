@@ -3,7 +3,7 @@
 Welcome to my **personal portfolio** named MNab, which stands for MN Laboratory, built with **React**, **Vite**, **Tailwind CSS**, and **DaisyUI**.  
 This project showcases my **achievements**, **career path**, and allows visitors to **contact me** directly.
 
-🔗 **Live Demo**: [My Portfolio] https://mnlab-portfolio.netlify.app/ 
+🔗 **Live Demo**: https://mnlab-portfolio.netlify.app/ 
 
 ---
 
