@@ -30,7 +30,7 @@
     "id": 1740773585082,
     "title": "Portfolio Creation",
     "description": "Lorem Lorem",
-    "img": "/uploads/1740773516994-wallpapervoyage.jpg",
+    "img": "1740773516994-wallpapervoyage.jpg",
     "category": "Development",
     "likes": 11,
     "liked": false
@@ -39,7 +39,7 @@
     "id": 1740777386314,
     "title": "Modify test",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    "img": "/uploads/1740773516994-wallpapervoyage.jpg",
+    "img": "1740773516994-wallpapervoyage.jpg",
     "category": "Other",
     "likes": 7,
     "liked": false
@@ -49,7 +49,7 @@
     "title": "test",
     "description": "test",
     "category": "Development",
-    "img": "/uploads/1740785651933-zoro.jpg",
+    "img": "1740785651933-zoro.jpg",
     "likes": 6,
     "liked": false
   }
