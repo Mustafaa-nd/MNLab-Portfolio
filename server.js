@@ -15,7 +15,7 @@ app.use("/images", express.static("src/images"));
 app.use("/data", express.static("public/data"));
 
 // Servir les fichiers uploadés
-app.use("/uploads", express.static("src/upload"));
+app.use("/uploads", express.static("src/uploads"));
 
 app.use(cors());
 app.use(bodyParser.json());
