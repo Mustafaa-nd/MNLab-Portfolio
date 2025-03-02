@@ -1,26 +1,16 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
 const ProjectCard = ({ project, theme }) => {
   const navigate = useNavigate();
   const [likes, setLikes] = useState(project.likes || 0);
   const [liked, setLiked] = useState(project.liked || false); 
-  const [imageUrl, setImageUrl] = useState("");
 
   useEffect(() => {
-    // ✅ Mise à jour du chemin de l'image en ligne
-    if (project.img.startsWith("/uploads")) {
-      setImageUrl(`${API_BASE_URL}${project.img}`);
-    } else {
-      setImageUrl(project.img);
-    }
-
-    // ✅ Récupérer les likes depuis l'API
+  
     const fetchLikes = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/achievements`);
+        const response = await fetch(`http://localhost:5000/achievements`);
         if (!response.ok) throw new Error("Erreur lors du chargement des likes");
 
         const achievements = await response.json();
@@ -28,7 +18,7 @@ const ProjectCard = ({ project, theme }) => {
 
         if (currentProject) {
           setLikes(currentProject.likes || 0);
-          setLiked(currentProject.liked || false);
+          setLiked(currentProject.liked || false); 
         }
       } catch (error) {
         console.error("❌ Impossible de récupérer les likes :", error);
@@ -36,13 +26,13 @@ const ProjectCard = ({ project, theme }) => {
     };
 
     fetchLikes();
-  }, [project.id, project.img]);
+  }, [project.id]);
 
   const handleLike = async () => {
-    const action = liked ? "unlike" : "like";
+    const action = liked ? "unlike" : "like"; 
 
     try {
-      const response = await fetch(`${API_BASE_URL}/achievements/${project.id}/like`, {
+      const response = await fetch(`http://localhost:5000/achievements/${project.id}/like`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action }),
@@ -51,8 +41,8 @@ const ProjectCard = ({ project, theme }) => {
       if (!response.ok) throw new Error("Erreur lors de l'ajout du like");
 
       const data = await response.json();
-      setLikes(data.likes);
-      setLiked(data.liked);
+      setLikes(data.likes); 
+      setLiked(data.liked); 
     } catch (error) {
       console.error("❌ Impossible de modifier le like :", error);
     }
@@ -67,7 +57,7 @@ const ProjectCard = ({ project, theme }) => {
       }`}
     >
       <figure className="relative">
-        <img src={imageUrl} alt={project.title} className="object-cover w-full h-56" />
+        <img src={project.img} alt={project.title} className="object-cover w-full h-56" />
       </figure>
 
       <div className="card-body relative">

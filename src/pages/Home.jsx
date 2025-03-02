@@ -17,7 +17,7 @@ const Home = () => {
 
   // Charger les réalisations depuis achievements.json
   useEffect(() => {
-    fetch("https://mnlab-portfolios.onrender.com/data/achievements.json")
+    fetch("/data/achievements.json")
       .then((res) => res.json())
       .then((data) => setAchievementsData(data))
       .catch((error) => console.error("Erreur lors du chargement des données:", error));

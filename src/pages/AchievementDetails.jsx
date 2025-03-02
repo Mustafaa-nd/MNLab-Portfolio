@@ -3,7 +3,6 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { Share2, ArrowLeft, Edit, Trash, Save } from "lucide-react";
 import { useAuth } from "../AuthContext"; 
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const AchievementDetails = () => {
   const { user } = useAuth(); 
@@ -14,8 +13,8 @@ const AchievementDetails = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState("");
   const [editedDescription, setEditedDescription] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
 
+  
   useEffect(() => {
     const handleThemeChange = () => {
       setTheme(localStorage.getItem("theme") || "light");
@@ -28,7 +27,7 @@ const AchievementDetails = () => {
   }, []);
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/achievements`)
+    fetch("http://localhost:5000/achievements")
       .then((res) => res.json())
       .then((data) => {
         const selectedProject = data.find((proj) => proj.id.toString() === id);
@@ -38,13 +37,6 @@ const AchievementDetails = () => {
           setProject(selectedProject);
           setEditedTitle(selectedProject.title);
           setEditedDescription(selectedProject.description);
-
-          // ✅ Vérifier si l'image est hébergée sur le serveur
-          if (selectedProject.img.startsWith("/uploads")) {
-            setImageUrl(`${API_BASE_URL}${selectedProject.img}`);
-          } else {
-            setImageUrl(selectedProject.img);
-          }
         }
       })
       .catch(() => navigate("/achievements"));
@@ -52,8 +44,10 @@ const AchievementDetails = () => {
 
   if (!project) return <p className="text-center text-lg">Loading...</p>;
 
+  const formattedDescription = project.description.replace(/\n/g, "<br />");
+
   const handleEdit = async () => {
-    const response = await fetch(`${API_BASE_URL}/achievements/${id}`, {
+    const response = await fetch(`http://localhost:5000/achievements/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title: editedTitle, description: editedDescription }),
@@ -68,7 +62,7 @@ const AchievementDetails = () => {
   const handleDelete = async () => {
     if (!window.confirm("Voulez-vous vraiment supprimer ce projet ?")) return;
 
-    const response = await fetch(`${API_BASE_URL}/achievements/${id}`, {
+    const response = await fetch(`http://localhost:5000/achievements/${id}`, {
       method: "DELETE",
     });
 
@@ -122,7 +116,7 @@ const AchievementDetails = () => {
       }`}>
         <div className="relative w-full overflow-hidden rounded-lg group">
           <img
-            src={imageUrl}
+            src={project.img}
             alt={project.title}
             className="w-full h-80 object-cover rounded-lg transform group-hover:scale-105 transition-all duration-300"
           />
@@ -135,7 +129,7 @@ const AchievementDetails = () => {
             className="w-full mt-4 p-2 bg-transparent border border-gray-300 rounded-lg focus:outline-none"
           />
         ) : (
-          <p className="mt-6 text-lg leading-relaxed">{editedDescription}</p>
+          <p className="mt-6 text-lg leading-relaxed" dangerouslySetInnerHTML={{ __html: formattedDescription }}></p>
         )}
 
         <div className="flex justify-between mt-6">
