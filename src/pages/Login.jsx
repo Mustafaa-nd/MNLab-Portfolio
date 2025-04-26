@@ -33,17 +33,17 @@ const Login = () => {
   };
 
   return (
-    <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${
+    <div className={`min-h-screen flex items-center justify-center p-6 mt-6 transition-colors duration-300 ${
       theme === "dark" ? "bg-gray-900 text-white" : "bg-gray-200 text-gray-900"
     }`}>
       <div className={`p-8 rounded-lg shadow-xl w-full max-w-md transform transition duration-500 hover:scale-105 ${
         theme === "dark" ? "bg-gray-800 border border-gray-700" : "bg-white"
       }`}>
         <h2 className="text-2xl font-bold text-center">
-          Welcome to MNLaboratory🧪
+          Welcome back Mustafaa
         </h2>
         <h2 className="text-xl font-semibold text-center mb-6">
-          Login page
+          Shadow Monarch
         </h2>
         
         {error && (

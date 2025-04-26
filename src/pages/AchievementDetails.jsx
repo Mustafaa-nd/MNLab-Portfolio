@@ -27,20 +27,19 @@ const AchievementDetails = () => {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:5000/achievements")
-      .then((res) => res.json())
+    fetch(`http://localhost:5000/achievements/${id}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Project Not found");
+        return res.json();
+      })
       .then((data) => {
-        const selectedProject = data.find((proj) => proj.id.toString() === id);
-        if (!selectedProject) {
-          navigate("/achievements");
-        } else {
-          setProject(selectedProject);
-          setEditedTitle(selectedProject.title);
-          setEditedDescription(selectedProject.description);
-        }
+        setProject(data);
+        setEditedTitle(data.title);
+        setEditedDescription(data.description);
       })
       .catch(() => navigate("/achievements"));
   }, [id, navigate]);
+  
 
   if (!project) return <p className="text-center text-lg">Loading...</p>;
 
@@ -60,7 +59,7 @@ const AchievementDetails = () => {
   };
 
   const handleDelete = async () => {
-    if (!window.confirm("Voulez-vous vraiment supprimer ce projet ?")) return;
+    if (!window.confirm("Are you sure you want to delete this project ?")) return;
 
     const response = await fetch(`http://localhost:5000/achievements/${id}`, {
       method: "DELETE",
@@ -77,7 +76,7 @@ const AchievementDetails = () => {
   };
 
   return (
-    <div className={`mt-16 min-h-screen flex flex-col items-center justify-center p-8 transition-colors duration-300 ${
+    <div className={`mt-20 min-h-screen flex flex-col items-center justify-center p-8 transition-colors duration-300 ${
       theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-gray-900"
     }`}>
 
@@ -131,6 +130,10 @@ const AchievementDetails = () => {
         ) : (
           <p className="mt-6 text-lg leading-relaxed" dangerouslySetInnerHTML={{ __html: formattedDescription }}></p>
         )}
+
+          <p className="text-sm opacity-80">
+            Last update: {new Date(project.created_at).toLocaleDateString()}
+          </p>
 
         <div className="flex justify-between mt-6">
           <button

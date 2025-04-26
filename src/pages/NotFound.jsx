@@ -14,7 +14,7 @@ const NotFound = () => {
   }, []);
 
   return (
-    <div className={`min-h-screen flex flex-col items-center justify-center text-center p-6 transition-colors duration-300 ${
+    <div className={`min-h-screen flex flex-col items-center justify-center text-center p-8 transition-colors duration-300 ${
       theme === "dark" ? "bg-gray-800 text-white" : "bg-gray-200 text-gray-900"
     }`}>
       <h1 className="text-6xl font-bold text-green-500 mb-4">404</h1>

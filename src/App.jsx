@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { lazy, Suspense } from "react";
 import { AuthProvider } from "./AuthContext"; 
 import ProtectedRoute from "./ProtectedRoute"; 
 
@@ -18,20 +19,22 @@ function App() {
     <AuthProvider>
       <Router>
         <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/achievements" element={<Achievements />} /> 
-          <Route path="/achievements/:id" element={<AchievementDetails />} />
-          <Route path="/studies" element={<Studies />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/laboratory" element={<Login />} /> 
-          
-          {/* Route protégée pour la création d'achievements */}
-          <Route path="/create-achievement" element={<ProtectedRoute component={CreateAchievements} />} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/achievements" element={<Achievements />} /> 
+            <Route path="/achievements/:id" element={<AchievementDetails />} />
+            <Route path="/studies" element={<Studies />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/laboratory" element={<Login />} /> 
+            
+            {/* Route protégée pour la création d'achievements */}
+            <Route path="/create-achievement" element={<ProtectedRoute component={CreateAchievements} />} />
 
-          <Route path="*" element={<NotFound />} />
+            <Route path="*" element={<NotFound />} />
 
-        </Routes>
+          </Routes>
+        </Suspense>
         <Footer />
       </Router>
     </AuthProvider>

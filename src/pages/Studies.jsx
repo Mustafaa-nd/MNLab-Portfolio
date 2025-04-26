@@ -16,7 +16,7 @@ const Studies = () => {
 
     return (
 
-    <div className={`min-h-screen p-4 transition-colors duration-300 ${theme === "dark" ? "bg-gray-800 text-white" : "bg-gray-100 text-black"}`}>
+    <div className={`min-h-screen p-10 transition-colors duration-300 ${theme === "dark" ? "bg-gray-800 text-white" : "bg-gray-100 text-black"}`}>
       <div className=" flex flex-col items-center justify-center breadcrumbs text-base mt-16">
         <ul className="flex space-x-2">
           <li>
@@ -32,7 +32,7 @@ const Studies = () => {
           
           <div className={`shadow-lg rounded-lg p-6 border w-full md:w-1/3 transition-all duration-300 transform hover:scale-105 hover:shadow-xl ${theme === "dark" ? "bg-gray-700 border-green-500 text-white" : "bg-gray-400 border-green-500 text-gray-900"}`}>
             <div className="flex items-center space-x-3">
-              <img src="/src/images/cyber-security.png" alt="Cybersecurity Icon" className="w-12 h-12"/>
+              <img src="/images/cyber-security.png" alt="Cybersecurity Icon" className="w-12 h-12"/>
               <h3 className="text-2xl font-bold">Cybersecurity</h3>
             </div>
             <p className="mt-2">
@@ -43,7 +43,7 @@ const Studies = () => {
 
           <div className={`shadow-lg rounded-lg p-6 border w-full md:w-1/3 transition-all duration-300 transform hover:scale-105 hover:shadow-xl ${theme === "dark" ? "bg-gray-700 border-green-500 text-white" : "bg-gray-400 border-green-500 text-gray-900"}`}>
             <div className="flex items-center space-x-3">
-              <img src="/src/images/artificial-intelligence.png" alt="AI Icon" className="w-12 h-12"/>
+              <img src="/images/artificial-intelligence.png" alt="AI Icon" className="w-12 h-12"/>
               <h3 className="text-2xl font-bold">Artificial Intelligence</h3>
             </div>
             <p className="mt-2">
@@ -54,7 +54,7 @@ const Studies = () => {
 
           <div className={`shadow-lg rounded-lg p-6 border w-full md:w-1/3 transition-all duration-300 transform hover:scale-105 hover:shadow-xl ${theme === "dark" ? "bg-gray-700 border-green-500 text-white" : "bg-gray-400 border-green-500 text-gray-900"}`}>
             <div className="flex items-center space-x-3">
-              <img src="/src/images/app-development.png" alt="Development Icon" className="w-12 h-12"/>
+              <img src="/images/app-development.png" alt="Development Icon" className="w-12 h-12"/>
               <h3 className="text-2xl font-bold">Development</h3>
             </div>
             <p className="mt-2">
@@ -80,7 +80,7 @@ const Studies = () => {
                 
                 <li>
                   <div className="flex items-center space-x-3">
-                    <img src="/src/images/flash.png" alt="Development Icon" className="w-8 h-8"/>
+                    <img src="/images/flash.png" alt="Development Icon" className="w-8 h-8"/>
                     <h3 className="font-bold text-green-700">Programming</h3>
                   </div>
                   <ul className="ml-4 list-disc">
@@ -92,7 +92,7 @@ const Studies = () => {
 
                 <li>
                   <div className="flex items-center space-x-3">
-                    <img src="/src/images/flash.png" alt="Development Icon" className="w-8 h-8"/>
+                    <img src="/images/flash.png" alt="Development Icon" className="w-8 h-8"/>
                     <h3 className="font-bold text-green-700">Database Administration</h3>
                   </div>
                   <ul className="ml-4 list-disc">
@@ -104,7 +104,7 @@ const Studies = () => {
 
                 <li>
                   <div className="flex items-center space-x-3">
-                    <img src="/src/images/flash.png" alt="Development Icon" className="w-8 h-8"/>
+                    <img src="/images/flash.png" alt="Development Icon" className="w-8 h-8"/>
                     <h3 className="font-bold text-green-700">Web Development</h3>
                   </div>
                   <ul className="ml-4 list-disc">
@@ -117,7 +117,7 @@ const Studies = () => {
 
                 <li>
                   <div className="flex items-center space-x-3">
-                    <img src="/src/images/flash.png" alt="Development Icon" className="w-8 h-8"/>
+                    <img src="/images/flash.png" alt="Development Icon" className="w-8 h-8"/>
                     <h3 className="font-bold text-green-700">System Administration</h3>
                   </div>
                   <ul className="ml-4 list-disc">
@@ -128,7 +128,7 @@ const Studies = () => {
 
                 <li>
                   <div className="flex items-center space-x-3">
-                    <img src="/src/images/flash.png" alt="Development Icon" className="w-8 h-8"/>
+                    <img src="/images/flash.png" alt="Development Icon" className="w-8 h-8"/>
                     <h3 className="font-bold text-green-700">Network Services</h3>
                   </div>
                   <ul className="ml-4 list-disc">
@@ -139,7 +139,7 @@ const Studies = () => {
 
                 <li>
                   <div className="flex items-center space-x-3">
-                    <img src="/src/images/flash.png" alt="Development Icon" className="w-8 h-8"/>
+                    <img src="/images/flash.png" alt="Development Icon" className="w-8 h-8"/>
                     <h3 className="font-bold text-green-700">Security</h3>
                   </div>
                   <ul className="ml-4 list-disc">
@@ -235,7 +235,7 @@ const Studies = () => {
           
           <div className="flex justify-center items-center">
             <div className="relative w-36 h-36 bg-transparent rounded-full flex justify-center items-center">
-              <img src="/src/images/icon-accomplishments.png" alt="Accomplishments Icon" className="relative z-1 w-24 h-24 mb-80" />
+              <img src="/images/icon-accomplishments.png" alt="Accomplishments Icon" className="relative z-1 w-24 h-24 mb-80" />
             </div>
           </div>
 
@@ -244,7 +244,7 @@ const Studies = () => {
               Distinctions
             </h1>
             <div className="mt-16 relative z-10">
-              <img src="/src/images/Backgroundmn-2.png" alt="Background" className="absolute opacity-70 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  w-full max-w-xl" />
+              <img src="/images/Backgroundmn-2.png" alt="Background" className="absolute opacity-70 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  w-full max-w-xl" />
             </div>
           </div>
 
@@ -252,19 +252,19 @@ const Studies = () => {
             
             <div className="w-64 transform transition-transform duration-300 hover:scale-105">
               <a href="/certificates">
-                <img src="/src/images/certif-forceN.png" alt="ForceN Certificate" className="w-full rounded-lg shadow-lg" />
+                <img src="/images/certif-forceN.png" alt="ForceN Certificate" className="w-full rounded-lg shadow-lg" />
               </a>
             </div>
 
             <div className="w-64 transform transition-transform duration-300 hover:scale-105 bg-gradient-to-t">
               <a href="/certificates">
-                <img src="/src/images/Decoration-clubhumanitaire.png" alt="Club Humanitaire Award" className="w-full  rounded-lg shadow-lg" />
+                <img src="/images/Decoration-clubhumanitaire.png" alt="Club Humanitaire Award" className="w-full  rounded-lg shadow-lg" />
               </a>
             </div>
 
             <div className="w-64 transform transition-transform duration-300 hover:scale-105">
               <a href="/certificates">
-                <img src="/src/images/Certif-netacad.png" alt="Cisco Netacad Certificate" className="w-full rounded-lg shadow-lg" />
+                <img src="/images/Certif-netacad.png" alt="Cisco Netacad Certificate" className="w-full rounded-lg shadow-lg" />
               </a>
             </div>
 
@@ -276,7 +276,7 @@ const Studies = () => {
   
         <div
           className="absolute inset-0 bg-cover bg-center bg-fixed"
-          style={{ backgroundImage: "url('/src/images/mn_contact_background.jpg')" }}
+          style={{ backgroundImage: "url('/images/mn_contact_background.jpg')" }}
         ></div>
 
         <div className="relative z-10 flex justify-end items-center h-screen w-full pr-12">

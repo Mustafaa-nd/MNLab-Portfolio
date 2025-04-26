@@ -15,27 +15,37 @@ const Home = () => {
     return () => window.removeEventListener("themeChange", handleThemeChange);
   }, []);
 
-  // Charger les réalisations depuis achievements.json
   useEffect(() => {
-    fetch("/data/achievements.json")
+    fetch("http://localhost:5000/achievements/recent")
       .then((res) => res.json())
-      .then((data) => setAchievementsData(data))
-      .catch((error) => console.error("Erreur lors du chargement des données:", error));
+      .then((data) => {
+        console.log("✅ Données chargées :", data);
+        if (Array.isArray(data)) {
+          setAchievementsData(data);
+        } else {
+          console.error("❌ Données reçues incorrectes :", data);
+          setAchievementsData([]);
+        }
+      })
+      .catch((error) => {
+        console.error("Erreur lors du chargement des données:", error);
+        setAchievementsData([]);
+      });
   }, []);
 
   return (
-    <div className={`relative mt-16 w-full ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-green-900"}`}>
+    <div className={`relative mt-20 w-full ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-green-900"}`}>
       
       {/* Image de fond en arrière-plan */}
       <div
         className="absolute top-0 left-0 w-full h-screen bg-cover bg-center bg-fixed"
-        style={{ backgroundImage: "url('/src/images/MN.jpg')" }} 
+        style={{ backgroundImage: "url('/images/MN.jpg')" }} 
       ></div>
 
       {/* Section Profil */}
       <section className="relative z-10 flex flex-col items-center justify-center h-screen text-center bg-black bg-opacity-60">
         <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden shadow-lg border-4 border-green-500">
-          <img src="/src/images/MN.jpg" alt="Profil" className="w-full h-full object-cover rounded-full" />
+          <img loading="lazy" src="/images/MN.jpg" alt="Profil" className="w-full h-full object-cover rounded-full" />
         </div>
         <div className={`mt-6 p-8 rounded-lg shadow-lg border backdrop-blur-md max-w-xl ${theme === "dark" ? "bg-gray-800 border-gray-600 text-gray-300" : "bg-white border-gray-300 text-gray-900"}`}>
           <h2 className="text-4xl font-bold">Mouhamadou Moustapha NDIAYE</h2>
@@ -43,7 +53,7 @@ const Home = () => {
             "Mugiwara no Mustafaa" <br />
             If you don’t take risks, you can’t create a future. <br />
             You need to accept the fact that you're not the best and have all the will to strive to be better than anyone you face. <br />
-            Push through the pain. Giving up hurts more.
+            Push through the pain, giving up hurts more.
           </p>
         </div>
       </section>

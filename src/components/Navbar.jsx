@@ -38,9 +38,13 @@ const Navbar = () => {
       } ${theme === "dark" ? "bg-gray-900 text-green-600" : "bg-white text-green-900"} shadow-md`}
     >
       <div className="navbar">
-        <div className="navbar-start">
-          <Link to="/" className="btn btn-ghost text-xl">
-            MNLab
+        <div className="navbar-start pl-10">
+          <Link to="/" className="normal-case text-xl flex items-center">
+            <img 
+              src={theme === "dark" ? "/images/MustaCore-dark.png" : "/images/MustaCore-light.png"} 
+              alt="MustaCore_logo" 
+              className="w-20 h-20 object-cover rounded-full aspect-square" 
+            />
           </Link>
         </div>
 

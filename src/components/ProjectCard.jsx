@@ -57,7 +57,7 @@ const ProjectCard = ({ project, theme }) => {
       }`}
     >
       <figure className="relative">
-        <img src={project.img} alt={project.title} className="object-cover w-full h-56" />
+        <img loading="lazy" src={project.img} alt={project.title} className="object-cover w-full h-56" />
       </figure>
 
       <div className="card-body relative">
@@ -84,6 +84,10 @@ const ProjectCard = ({ project, theme }) => {
         <h2 className="card-title mt-2">{project.title}</h2>
 
         <p className="text-sm opacity-80">{project.description}</p>
+
+        <p className="text-sm opacity-80">
+            {new Date(project.created_at).toLocaleDateString()}
+        </p>
 
         <div className="card-actions justify-end">
           <button onClick={() => navigate(`/achievements/${project.id}`)} className="btn glass">

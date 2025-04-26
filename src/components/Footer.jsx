@@ -19,7 +19,7 @@ const Footer = () => {
       `}
     >
       <aside>
-        <p>Copyright © MNLabs - All rights reserved</p>
+        <p>Copyright 2025©MustaCore - All rights reserved</p>
       </aside>
     </footer>
   );

@@ -1,26 +1,42 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import fs from "fs";
 import multer from "multer";
+import dotenv from "dotenv";
+import mysql from "mysql2/promise";
+import path from "path";
+import fs from "fs";
 
+console.log("✅ Server file loaded, waiting for requests...");
+
+dotenv.config();
 const app = express();
 const PORT = 5000;
 
-app.use(cors());
+// Secure CORS setup
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true,
+}));
+
 app.use(bodyParser.json());
-app.use(express.static("uploads"));
 
-const FILE_PATH = "./public/data/achievements.json";
+// Connexion MySQL
+const db = await mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+});
 
-// Vérifier et créer le dossier "uploads" si inexistant
+// Dossier upload
 const uploadDir = "./uploads";
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
   console.log("📂 Dossier 'uploads' créé avec succès !");
 }
 
-// Configuration de multer pour l'upload d'images
+// Upload config
 const storage = multer.diskStorage({
   destination: uploadDir,
   filename: (req, file, cb) => {
@@ -29,150 +45,160 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Réinitialiser tous les "liked" à false au démarrage
-fs.readFile(FILE_PATH, "utf8", (err, data) => {
-  if (!err) {
-    let achievements = JSON.parse(data);
-    achievements = achievements.map((proj) => ({ ...proj, liked: false })); 
 
-    fs.writeFile(FILE_PATH, JSON.stringify(achievements, null, 2), "utf8", (err) => {
-      if (!err) console.log("✅ Tous les 'liked' ont été réinitialisés à false !");
-    });
+// ✅ GET achievements avec filtres
+app.get("/achievements", async (req, res) => {
+  const { category, search } = req.query;
+  try {
+    let query = "SELECT * FROM achievements";
+    const values = [];
+
+    if (category || search) {
+      query += " WHERE";
+      if (category) {
+        query += " LOWER(category) = ?";
+        values.push(category.trim().toLowerCase());
+      }
+      if (search) {
+        if (category) query += " AND";
+        query += " (LOWER(title) LIKE ? OR LOWER(description) LIKE ? OR LOWER(category) LIKE ?)";
+        const term = `%${search.trim().toLowerCase()}%`;
+        values.push(term, term, term);
+      }
+    }
+
+    query += " ORDER BY created_at DESC"; // 🔥 Ajouter ORDER BY uniquement à la fin
+
+    const [rows] = await db.query(query, values);
+    res.json(rows);
+  } catch (err) {
+    console.error("Erreur GET:", err);
+    res.status(500).json({ error: "Erreur lors du chargement des données" });
   }
 });
 
 
-// ✅ Ajouter ou retirer un like à un achievement
-app.put("/achievements/:id/like", (req, res) => {
-  const { id } = req.params;
-  const { action } = req.body; // ✅ Récupérer l'action (like/unlike)
-
-  fs.readFile(FILE_PATH, "utf8", (err, data) => {
-    if (err) return res.status(500).json({ error: "Erreur de lecture du fichier" });
-
-    let achievements = JSON.parse(data);
-    const index = achievements.findIndex((proj) => proj.id.toString() === id);
-
-    if (index === -1) return res.status(404).json({ error: "Projet non trouvé" });
-
-    if (action === "like") {
-      achievements[index].likes += 1;
-      achievements[index].liked = true; // ✅ Stocker que cet utilisateur a liké
-    } else if (action === "unlike" && achievements[index].likes > 0) {
-      achievements[index].likes -= 1;
-      achievements[index].liked = false; // ✅ Stocker que cet utilisateur a retiré son like
-    }
-
-    fs.writeFile(FILE_PATH, JSON.stringify(achievements, null, 2), "utf8", (err) => {
-      if (err) return res.status(500).json({ error: "Erreur de modification du fichier" });
-      res.status(200).json({ message: `Like ${action} réussi`, likes: achievements[index].likes, liked: achievements[index].liked });
-    });
-  });
-});
-
-
-
-// Charger les achieveentss avec Recherche et Filtrage
-app.get("/achievements", (req, res) => {
-  fs.readFile(FILE_PATH, "utf8", (err, data) => {
-    if (err) return res.status(500).json({ error: "Erreur de lecture du fichier" });
-
-    let achievements = JSON.parse(data);
-    const { category, search } = req.query;
-
-    console.log(`🔍 Recherche: "${search || "Aucune"}" | 📂 Catégorie: "${category || "Toutes"}"`);
-
-    // Normaliser la catégorie (supprimer espaces, minuscule)
-    if (category) {
-      const normalizedCategory = category.trim().toLowerCase();
-      achievements = achievements.filter(
-        (proj) => proj.category && proj.category.toLowerCase() === normalizedCategory
-      );
-    }
-
-    // Recherche dans le titre, la description et la catégorie
-    if (search) {
-      const normalizedSearch = search.trim().toLowerCase();
-      achievements = achievements.filter(
-        (proj) =>
-          proj.title.toLowerCase().includes(normalizedSearch) ||
-          proj.description.toLowerCase().includes(normalizedSearch) ||
-          (proj.category && proj.category.toLowerCase().includes(normalizedSearch)) 
-      );
-    }
-
-    res.json(achievements);
-  });
-});
-
-app.post("/achievements", upload.single("image"), (req, res) => {
+// ✅ POST - Ajouter un achievement
+app.post("/achievements", upload.single("image"), async (req, res) => {
   const { title, description, category } = req.body;
   const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
-  const newAchievement = {
-    id: Date.now(),
-    title,
-    description,
-    category: category || "Other", 
-    img: imagePath,
-  };
 
-  fs.readFile(FILE_PATH, "utf8", (err, data) => {
-    if (err) return res.status(500).json({ error: "Erreur de lecture du fichier" });
-
-    const achievements = JSON.parse(data);
-    achievements.push(newAchievement);
-
-    fs.writeFile(FILE_PATH, JSON.stringify(achievements, null, 2), "utf8", (err) => {
-      if (err) return res.status(500).json({ error: "Erreur d'écriture dans le fichier" });
-      res.status(201).json({ message: "Réalisation ajoutée avec succès", achievement: newAchievement });
-    });
-  });
+  try {
+    const [result] = await db.query(
+      "INSERT INTO achievements (id, title, description, category, img) VALUES (?, ?, ?, ?, ?)",
+      [Date.now(), title, description, category || "Other", imagePath]
+    );
+    res.status(201).json({ message: "Réalisation ajoutée avec succès", id: result.insertId });
+  } catch (err) {
+    console.error("Erreur POST:", err);
+    res.status(500).json({ error: "Erreur lors de l'ajout du projet" });
+  }
 });
 
-// Modifier un achievement
-app.put("/achievements/:id", (req, res) => {
+// ✅ PUT - Modifier un achievement
+app.put("/achievements/:id", async (req, res) => {
   const { id } = req.params;
   const { title, description, category } = req.body;
 
-  fs.readFile(FILE_PATH, "utf8", (err, data) => {
-    if (err) return res.status(500).json({ error: "Erreur de lecture du fichier" });
-
-    let achievements = JSON.parse(data);
-    const index = achievements.findIndex((proj) => proj.id.toString() === id);
-
-    if (index === -1) return res.status(404).json({ error: "Projet non trouvé" });
-
-    achievements[index].title = title;
-    achievements[index].description = description;
-    achievements[index].category = category || achievements[index].category;
-
-    fs.writeFile(FILE_PATH, JSON.stringify(achievements, null, 2), "utf8", (err) => {
-      if (err) return res.status(500).json({ error: "Erreur de modification du fichier" });
-      res.status(200).json({ message: "Projet modifié avec succès" });
-    });
-  });
+  try {
+    const [result] = await db.query(
+      "UPDATE achievements SET title = ?, description = ?, category = ? WHERE id = ?",
+      [title, description, category, id]
+    );
+    if (result.affectedRows === 0)
+      return res.status(404).json({ error: "Projet non trouvé" });
+    res.json({ message: "Projet modifié avec succès" });
+  } catch (err) {
+    console.error("Erreur PUT:", err);
+    res.status(500).json({ error: "Erreur lors de la modification" });
+  }
 });
 
-// Supprimer un achievement
-app.delete("/achievements/:id", (req, res) => {
+// ✅ PUT - Like/unlike
+app.put("/achievements/:id/like", async (req, res) => {
   const { id } = req.params;
+  const { action } = req.body;
 
-  fs.readFile(FILE_PATH, "utf8", (err, data) => {
-    if (err) return res.status(500).json({ error: "Erreur de lecture du fichier" });
-
-    let achievements = JSON.parse(data);
-    const updatedAchievements = achievements.filter((proj) => proj.id.toString() !== id);
-
-    if (achievements.length === updatedAchievements.length)
+  try {
+    const [rows] = await db.query("SELECT likes FROM achievements WHERE id = ?", [id]);
+    if (rows.length === 0)
       return res.status(404).json({ error: "Projet non trouvé" });
 
-    fs.writeFile(FILE_PATH, JSON.stringify(updatedAchievements, null, 2), "utf8", (err) => {
-      if (err) return res.status(500).json({ error: "Erreur lors de la suppression du projet" });
-      res.status(200).json({ message: "Projet supprimé avec succès" });
-    });
-  });
+    let likes = rows[0].likes;
+    let liked = false;
+
+    if (action === "like") {
+      likes += 1;
+      liked = true;
+    } else if (action === "unlike" && likes > 0) {
+      likes -= 1;
+      liked = false;
+    }
+
+    await db.query("UPDATE achievements SET likes = ?, liked = ? WHERE id = ?", [likes, liked, id]);
+    res.json({ message: `Like ${action} réussi`, likes, liked });
+  } catch (err) {
+    console.error("Erreur LIKE:", err);
+    res.status(500).json({ error: "Erreur lors du traitement du like" });
+  }
 });
 
+// ✅ DELETE - Supprimer un achievement
+app.delete("/achievements/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const [result] = await db.query("DELETE FROM achievements WHERE id = ?", [id]);
+    if (result.affectedRows === 0)
+      return res.status(404).json({ error: "Projet non trouvé" });
+
+    res.json({ message: "Projet supprimé avec succès" });
+  } catch (err) {
+    console.error("Erreur DELETE:", err);
+    res.status(500).json({ error: "Erreur lors de la suppression" });
+  }
+});
+
+
+app.get("/categories", async (req, res) => {
+  try {
+    const [rows] = await db.query("SELECT DISTINCT category FROM achievements ORDER BY category ASC");
+    const categories = rows.map((row) => row.category);
+    res.json(categories);
+  } catch (err) {
+    console.error("Erreur GET /categories:", err);
+    res.status(500).json({ error: "Erreur lors du chargement des catégories" });
+  }
+});
+
+// ✅ D'abord route fixe
+app.get("/achievements/recent", async (req, res) => {
+  try {
+    const [rows] = await db.query("SELECT * FROM achievements ORDER BY id DESC LIMIT 3");
+    res.json(rows);
+  } catch (err) {
+    console.error("Erreur /achievements/recent:", err);
+    res.status(500).json({ error: "Server issue" });
+  }
+});
+
+// ✅ Ensuite seulement route paramétrée
+app.get("/achievements/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const [rows] = await db.query("SELECT * FROM achievements WHERE id = ?", [id]);
+    if (rows.length === 0) return res.status(404).json({ error: "Project Not Found" });
+    res.json(rows[0]);
+  } catch (err) {
+    console.error("Erreur GET:id:", err);
+    res.status(500).json({ error: "Server issue" });
+  }
+});
+
+app.use("/uploads", express.static("uploads"));
+
+
+// ✅ Lancer serveur
 app.listen(PORT, () => {
   console.log(`✅ Serveur backend lancé sur http://localhost:${PORT}`);
 });

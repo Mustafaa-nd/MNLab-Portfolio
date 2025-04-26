@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../AuthContext"; 
+import { useAuth } from "../AuthContext";
 import ProjectCard from "../components/ProjectCard";
 
 const Achievements = () => {
-  const { user } = useAuth();  
+  const { user } = useAuth();
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
   const [achievementsData, setAchievementsData] = useState([]);
-  const [searchQuery, setSearchQuery] = useState(""); 
-  const [category, setCategory] = useState(""); 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [category, setCategory] = useState("");
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     const handleThemeChange = () => {
@@ -22,13 +23,23 @@ const Achievements = () => {
   useEffect(() => {
     fetch(`http://localhost:5000/achievements?search=${searchQuery}&category=${category}`)
       .then((res) => res.json())
-      .then((data) => setAchievementsData(data))
-      .catch((error) => console.error("❌ Erreur lors du chargement des données:", error));
-  }, [searchQuery, category]);  
+      .then((data) => {
+        console.log("✅ Achievements fetched:", data);
+        setAchievementsData(data);
+      })
+      .catch((error) => console.error("❌ Error loading achievements:", error));
+  }, [searchQuery, category]);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/categories")
+      .then((res) => res.json())
+      .then((data) => setCategories(data))
+      .catch((err) => console.error("Erreur chargement catégories:", err));
+  }, []);
 
   return (
-    <div className={`min-h-screen p-8 mt-16 transition-colors duration-300 ${theme === "dark" ? "bg-gray-800 text-white" : "bg-gray-200 text-gray-900"}`}>
-      
+    <div className={`min-h-screen p-10 mt-16 transition-colors duration-300 ${theme === "dark" ? "bg-gray-800 text-white" : "bg-gray-200 text-gray-900"}`}>
+
       <div className="flex flex-col items-center justify-center breadcrumbs text-base mb-4">
         <ul className="flex space-x-2">
           <li>
@@ -65,11 +76,11 @@ const Achievements = () => {
           className="w-full md:w-1/3 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 mt-4 md:mt-0"
         >
           <option value="">All Categories</option>
-          <option value="Development">Development</option>
-          <option value="Design">Design</option>
-          <option value="Data Science">Data Science</option>
-          <option value="Security">Security</option>
-          <option value="Other">Other</option>
+          {categories.map((cat, index) => (
+            <option key={index} value={cat}>
+              {cat}
+            </option>
+          ))}
         </select>
       </div>
 

@@ -36,7 +36,7 @@ const Contact = () => {
   };
 
   return (
-    <div className={`mt-16 min-h-screen flex flex-col items-center justify-center p-6 transition-colors duration-300 ${
+    <div className={`mt-20 min-h-screen flex flex-col items-center justify-center p-6 transition-colors duration-300 ${
       theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-gray-900"
     }`}>
 

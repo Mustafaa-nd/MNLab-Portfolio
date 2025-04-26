@@ -1,64 +1,118 @@
 [
   {
-    "id": 1740773585078,
-    "title": "🚀 Application Development",
-    "description": "A powerful tool for task and project management.",
-    "img": "/src/images/shanks.jpg",
+    "id": 1741000000014,
+    "title": "React Portfolio",
+    "description": "Development of a personal portfolio with React, Tailwind, and Express backend.",
+    "img": "/images/portfolio.jpg",
     "category": "Development",
-    "likes": 5,
-    "liked": false
-  },
-  {
-    "id": 1740773585079,
-    "title": "🤌🏾 UI/UX Design",
-    "description": "Creating modern and intuitive interfaces.",
-    "img": "/src/images/zoro.jpg",
-    "category": "Design",
-    "likes": 10,
-    "liked": false
-  },
-  {
-    "id": 1740773585080,
-    "title": "📊 Data Analysis and Visualization",
-    "description": "Advanced data exploration and visualization.",
-    "img": "/src/images/jinwoo.jpg",
-    "category": "Data Science",
-    "likes": 4,
-    "liked": false
-  },
-  {
-    "id": 1740773585082,
-    "title": "Portfolio Creation",
-    "description": "Lorem Lorem",
-    "img": "/uploads/1740773516994-wallpapervoyage.jpg",
-    "category": "Development",
-    "likes": 11,
-    "liked": false
-  },
-  {
-    "id": 1740777386314,
-    "title": "Modify test",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    "img": "/uploads/1740773516994-wallpapervoyage.jpg",
-    "category": "Other",
-    "likes": 8,
+    "likes": 1,
     "liked": true
   },
   {
-    "id": 1740785651939,
-    "title": "test",
-    "description": "test",
-    "category": "Development",
-    "img": "/uploads/1740785651933-zoro.jpg",
-    "likes": 6,
+    "id": 1741000000001,
+    "title": "Snort Intrusion Detection",
+    "description": "Installation and configuration of Snort on an Ubuntu server to monitor traffic, block intrusions, analyze logs, and configure OpenAppID.",
+    "img": "/images/snort.png",
+    "category": "Security",
+    "likes": 1,
+    "liked": true
+  },
+  {
+    "id": 1741000000002,
+    "title": "Kerberos - Radius - LDAP",
+    "description": "Integration of an LDAP server with Kerberos and Radius to store and manage user authentication.",
+    "img": "/images/kerberos.png",
+    "category": "Security",
+    "likes": 0,
     "liked": false
   },
   {
-    "id": 1740889630071,
-    "title": "test",
-    "description": "test",
-    "category": "Other",
-    "img": "/uploads/1740889630068-logoccht.jpg",
+    "id": 1741000000003,
+    "title": "OpenVPN Configuration",
+    "description": "Set up of a Virtual Private Network (VPN) using OpenVPN.",
+    "img": "/images/vpn.png",
+    "category": "Network",
+    "likes": 0,
+    "liked": false
+  },
+  {
+    "id": 1741000000004,
+    "title": "DMZ and Firewall Setup",
+    "description": "Design of a Demilitarized Zone (DMZ) with firewall rules and traffic management.",
+    "img": "/images/firewall.png",
+    "category": "Network",
+    "likes": 0,
+    "liked": false
+  },
+  {
+    "id": 1741000000005,
+    "title": "Voting App (Cloud Native)",
+    "description": "Dockerization and deployment of a full cloud-native voting application.",
+    "img": "/images/cloud-app.png",
+    "category": "Cloud",
+    "likes": 0,
+    "liked": false
+  },
+  {
+    "id": 1741000000006,
+    "title": "Handwritten Digit Recognition",
+    "description": "Dockerization and deployment of an AI app recognizing digits (0-9) via a web interface.",
+    "img": "/images/ai-digit.png",
+    "category": "Cloud",
+    "likes": 0,
+    "liked": false
+  },
+  {
+    "id": 1741000000007,
+    "title": "CI/CD Fullstack Pipeline",
+    "description": "Continuous Integration and Deployment pipeline for a full-stack app.",
+    "img": "/images/cicd.png",
+    "category": "CI/CD",
+    "likes": 0,
+    "liked": false
+  },
+  {
+    "id": 1741000000008,
+    "title": "Weed Detection via Satellite",
+    "description": "Development of a program to detect striga using satellite images.",
+    "img": "/images/satellite.png",
+    "category": "Machine Learning",
+    "likes": 0,
+    "liked": false
+  },
+  {
+    "id": 1741000000009,
+    "title": "Heart Disease Prediction",
+    "description": "Training ML algorithms to detect potential heart disease presence.",
+    "img": "/images/heart.png",
+    "category": "Machine Learning",
+    "likes": 0,
+    "liked": false
+  },
+  {
+    "id": 1741000000010,
+    "title": "Data Warehouse Setup",
+    "description": "Design and management of a MySQL-based data warehouse.",
+    "img": "/images/mysql.png",
+    "category": "Data",
+    "likes": 0,
+    "liked": false
+  },
+  {
+    "id": 1741000000011,
+    "title": "Tableau Dashboards",
+    "description": "Creation of interactive dashboards using Tableau.",
+    "img": "/images/tableau.png",
+    "category": "Data",
+    "likes": 0,
+    "liked": false
+  },
+  {
+    "id": 1741000000012,
+    "title": "Business Website Management",
+    "description": "Creation and maintenance of business websites.",
+    "img": "/images/websites.png",
+    "category": "Development",
     "likes": 1,
     "liked": true
   }
