@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { lazy, Suspense } from "react";
+// import { lazy, Suspense } from "react";
 import { AuthProvider } from "./AuthContext"; 
 import ProtectedRoute from "./ProtectedRoute"; 
 
@@ -19,7 +19,7 @@ function App() {
     <AuthProvider>
       <Router>
         <Navbar />
-        <Suspense fallback={<div>Loading...</div>}>
+        {/* <Suspense fallback={<div>Loading...</div>}> */}
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/achievements" element={<Achievements />} /> 
@@ -34,7 +34,7 @@ function App() {
             <Route path="*" element={<NotFound />} />
 
           </Routes>
-        </Suspense>
+        {/* </Suspense> */}
         <Footer />
       </Router>
     </AuthProvider>

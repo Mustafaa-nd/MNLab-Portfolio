@@ -47,7 +47,7 @@ const Home = () => {
       {/* Profile Section */}
       <section className="relative z-10 flex flex-col items-center justify-center h-screen text-center bg-black bg-opacity-60">
         <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden shadow-lg border-4 border-green-500">
-          <img loading="lazy" src="/images/MN.jpg" alt="Profil" className="w-full h-full object-cover rounded-full" />
+          <img src="/images/MN.jpg" alt="Profil" className="w-full h-full object-cover rounded-full" />
         </div>
         <div className={`mt-6 p-8 rounded-lg shadow-lg border backdrop-blur-md max-w-xl ${theme === "dark" ? "bg-gray-800 border-gray-600 text-gray-300" : "bg-white border-gray-300 text-gray-900"}`}>
           <h2 className="text-4xl font-bold">Mouhamadou Moustapha NDIAYE</h2>

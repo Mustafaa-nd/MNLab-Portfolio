@@ -58,7 +58,7 @@ const ProjectCard = ({ project, theme }) => {
       }`}
     >
       <figure className="relative">
-        <img loading="lazy" src={project.img} alt={project.title} className="object-cover w-full h-56" />
+        <img src={project.img} alt={project.title} className="object-cover w-full h-56" />
       </figure>
 
       <div className="card-body relative">
