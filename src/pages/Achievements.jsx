@@ -11,6 +11,8 @@ const Achievements = () => {
   const [category, setCategory] = useState("");
   const [categories, setCategories] = useState([]);
 
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
   useEffect(() => {
     const handleThemeChange = () => {
       setTheme(localStorage.getItem("theme") || "light");
@@ -21,25 +23,24 @@ const Achievements = () => {
   }, []);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/achievements?search=${searchQuery}&category=${category}`)
+    fetch(`${BACKEND_URL}/achievements?search=${searchQuery}&category=${category}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log("✅ Achievements fetched:", data);
+        console.log("Achievements fetched:", data);
         setAchievementsData(data);
       })
-      .catch((error) => console.error("❌ Error loading achievements:", error));
-  }, [searchQuery, category]);
+      .catch((error) => console.error("Error loading achievements:", error));
+  }, [searchQuery, category, BACKEND_URL]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/categories")
+    fetch(`${BACKEND_URL}/categories`)
       .then((res) => res.json())
       .then((data) => setCategories(data))
       .catch((err) => console.error("Erreur chargement catégories:", err));
-  }, []);
+  }, [BACKEND_URL]);
 
   return (
     <div className={`min-h-screen p-10 mt-16 transition-colors duration-300 ${theme === "dark" ? "bg-gray-800 text-white" : "bg-gray-200 text-gray-900"}`}>
-
       <div className="flex flex-col items-center justify-center breadcrumbs text-base mb-4">
         <ul className="flex space-x-2">
           <li>

@@ -15,6 +15,8 @@ const CreateAchievements = () => {
   const [preview, setPreview] = useState(null);
   const [categories, setCategories] = useState([]);
 
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
   useEffect(() => {
     const handleThemeChange = () => {
       setTheme(localStorage.getItem("theme") || "light");
@@ -34,11 +36,11 @@ const CreateAchievements = () => {
   }, [user, navigate]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/categories")
+    fetch(`${BACKEND_URL}/categories`)
       .then((res) => res.json())
       .then((data) => setCategories(data))
-      .catch((err) => console.error("Erreur chargement catégories:", err));
-  }, []);
+      .catch((err) => console.error("Error while loading Categories:", err));
+  }, [BACKEND_URL]);
 
   const handleFileChange = (e) => {
     const uploadedFile = e.target.files[0];
@@ -67,7 +69,7 @@ const CreateAchievements = () => {
     formData.append("image", file);
 
     try {
-      const response = await fetch("http://localhost:5000/achievements", {
+      const response = await fetch(`${BACKEND_URL}/achievements`, {
         method: "POST",
         body: formData,
       });
@@ -76,35 +78,21 @@ const CreateAchievements = () => {
 
       navigate("/achievements");
     } catch (error) {
-      console.error("❌ Error:", error);
+      console.error("Error:", error);
     }
   };
 
   return (
-    <div
-      className={`mt-20 min-h-screen flex items-center justify-center p-8 transition-colors duration-300 ${
-        theme === "dark" ? "bg-gray-800 text-white" : "bg-gray-200 text-gray-900"
-      }`}
-    >
-      <div
-        className={`rounded-2xl shadow-2xl p-8 transition-transform will-change-transform text-center border ${
-          theme === "dark"
-            ? "bg-gray-900 border-green-500 shadow-green-500/50"
-            : "bg-gray-500 border-green-500 shadow-green-300/50"
-        }`}
-      >
+    <div className={`mt-20 min-h-screen flex items-center justify-center p-8 transition-colors duration-300 ${
+      theme === "dark" ? "bg-gray-800 text-white" : "bg-gray-200 text-gray-900"
+    }`}>
+      <div className={`rounded-2xl shadow-2xl p-8 transition-transform will-change-transform text-center border ${
+        theme === "dark" ? "bg-gray-900 border-green-500 shadow-green-500/50" : "bg-gray-500 border-green-500 shadow-green-300/50"
+      }`}>
         <div className="flex flex-col items-center justify-center breadcrumbs text-base mb-4">
           <ul className="flex space-x-2">
-            <li>
-              <Link to="/" className="text-green-700 hover:underline">
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link to="/achievements" className="text-green-700 hover:underline">
-                Achievements
-              </Link>
-            </li>
+            <li><Link to="/" className="text-green-700 hover:underline">Home</Link></li>
+            <li><Link to="/achievements" className="text-green-700 hover:underline">Achievements</Link></li>
             <li className="text-gray-500">Add Achievement</li>
           </ul>
         </div>
@@ -157,11 +145,7 @@ const CreateAchievements = () => {
           />
 
           {preview && (
-            <img
-              src={preview}
-              alt="Preview"
-              className="w-40 h-40 mt-4 rounded-lg shadow-md"
-            />
+            <img src={preview} alt="Preview" className="w-40 h-40 mt-4 rounded-lg shadow-md" />
           )}
 
           <button

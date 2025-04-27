@@ -6,6 +6,8 @@ const Home = () => {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
   const [achievementsData, setAchievementsData] = useState([]);
 
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
   useEffect(() => {
     const handleThemeChange = () => {
       setTheme(localStorage.getItem("theme") || "light");
@@ -16,33 +18,33 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:5000/achievements/recent")
+    fetch(`${BACKEND_URL}/achievements/recent`)
       .then((res) => res.json())
       .then((data) => {
-        console.log("✅ Données chargées :", data);
+        console.log("✅ Data loaded:", data);
         if (Array.isArray(data)) {
           setAchievementsData(data);
         } else {
-          console.error("❌ Données reçues incorrectes :", data);
+          console.error("🚫 Wrong data received:", data);
           setAchievementsData([]);
         }
       })
       .catch((error) => {
-        console.error("Erreur lors du chargement des données:", error);
+        console.error("❌ Error loading data:", error);
         setAchievementsData([]);
       });
-  }, []);
+  }, [BACKEND_URL]);
 
   return (
     <div className={`relative mt-20 w-full ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-green-900"}`}>
       
-      {/* Image de fond en arrière-plan */}
+      {/* Background image */}
       <div
         className="absolute top-0 left-0 w-full h-screen bg-cover bg-center bg-fixed"
-        style={{ backgroundImage: "url('/images/MN.jpg')" }} 
+        style={{ backgroundImage: "url('/images/MN.jpg')" }}
       ></div>
 
-      {/* Section Profil */}
+      {/* Profile Section */}
       <section className="relative z-10 flex flex-col items-center justify-center h-screen text-center bg-black bg-opacity-60">
         <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden shadow-lg border-4 border-green-500">
           <img loading="lazy" src="/images/MN.jpg" alt="Profil" className="w-full h-full object-cover rounded-full" />
@@ -58,7 +60,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Section Études (Timeline) */}
+      {/* Studies Timeline */}
       <section className={`relative z-20 p-6 shadow-2xl ${theme === "dark" ? "bg-gray-800 text-gray-200" : "bg-gray-100 text-green-900"}`}>
         <h2 className="text-4xl font-bold text-center text-green-700">Study Level</h2>
         <div className="mt-6 flex justify-center">
@@ -95,18 +97,16 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Section Réalisations */}
+      {/* Achievements Section */}
       <section className={`relative z-20 text-center p-12 md:p-20 ${theme === "dark" ? "bg-gray-800 text-gray-300" : "bg-gray-100 text-gray-900"}`}>
         <h2 className="text-5xl font-bold mb-8 text-green-700">Some of my Achievements</h2>
 
-        {/* Grille des cartes */}
         <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-8">
           {achievementsData.slice(0, 3).map((project, index) => (
             <ProjectCard key={index} project={project} theme={theme} />
           ))}
         </div>
 
-        {/* Bouton Voir Plus */}
         <div className="mt-8">
           <Link to="/achievements">
             <button className="btn glass">See all</button>
@@ -114,14 +114,13 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className={`relative z-20 text-center  ${theme === "dark" ? "bg-gray-800 text-gray-300" : "bg-gray-100 text-gray-900"}`}>
-
-      <div className="relative z-20  flex justify-center pb-4">
-        <a href="/contact" className={`px-8 py-4 text-lg font-semibold rounded-full shadow-lg transition-transform transform hover:scale-105 ${theme === "dark" ? "bg-green-800 hover:bg-green-900 text-white" : "bg-green-600 hover:bg-green-700 text-white"}`}>
-          Let's link up
-        </a>
-      </div>
+      {/* Contact Call to Action */}
+      <section className={`relative z-20 text-center ${theme === "dark" ? "bg-gray-800 text-gray-300" : "bg-gray-100 text-gray-900"}`}>
+        <div className="relative z-20 flex justify-center pb-4">
+          <a href="/contact" className={`px-8 py-4 text-lg font-semibold rounded-full shadow-lg transition-transform transform hover:scale-105 ${theme === "dark" ? "bg-green-800 hover:bg-green-900 text-white" : "bg-green-600 hover:bg-green-700 text-white"}`}>
+            Let's link up
+          </a>
+        </div>
       </section>
     </div>
   );

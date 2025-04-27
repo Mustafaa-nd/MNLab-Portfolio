@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import emailjs from '@emailjs/browser';
 
 
 const Contact = () => {
@@ -23,17 +24,36 @@ const Contact = () => {
     e.preventDefault();
     setError("");
     setSuccess("");
-
+  
     if (!name || !email || !message) {
       setError("All fields are required.");
       return;
     }
-
-    setSuccess("Your message has been sent successfully! 🚀");
-    setName("");
-    setEmail("");
-    setMessage("");
+  
+    const templateParams = {
+      from_name: name,
+      from_email: email,
+      message: message,
+    };
+  
+    emailjs.send(
+      import.meta.env.VITE_EMAILJS_SERVICE_ID,
+      import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+      templateParams,
+      import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+    )
+    .then(() => {
+      setSuccess("Your message has been successfully sent to Mustafaa!");
+      setName("");
+      setEmail("");
+      setMessage("");
+    })
+    .catch((error) => {
+      console.error("EmailJS error:", error);
+      setError("Something went wrong. Please try again later.");
+    });
   };
+  
 
   return (
     <div className={`mt-20 min-h-screen flex flex-col items-center justify-center p-6 transition-colors duration-300 ${
@@ -53,7 +73,7 @@ const Contact = () => {
         theme === "dark" ? "bg-gray-800 border border-gray-700" : "bg-white border border-gray-300"
       }`}>
         <h2 className="text-3xl font-bold text-center text-green-600 mb-6">
-          Get in Touch ✉️
+          Get in Touch!
         </h2>
 
         {error && <p className="text-red-500 bg-red-100 p-2 text-center rounded">{error}</p>}
@@ -106,7 +126,7 @@ const Contact = () => {
             type="submit"
             className="w-full py-3 rounded-lg font-semibold shadow-md bg-green-700 text-white hover:bg-green-800 transition-all duration-300"
           >
-            Send Message 🚀
+            Send Message
           </button>
         </form>
 

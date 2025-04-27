@@ -4,47 +4,48 @@ import { useNavigate } from "react-router-dom";
 const ProjectCard = ({ project, theme }) => {
   const navigate = useNavigate();
   const [likes, setLikes] = useState(project.likes || 0);
-  const [liked, setLiked] = useState(project.liked || false); 
+  const [liked, setLiked] = useState(project.liked || false);
+
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
-  
     const fetchLikes = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/achievements`);
-        if (!response.ok) throw new Error("Erreur lors du chargement des likes");
+        const response = await fetch(`${BACKEND_URL}/achievements`);
+        if (!response.ok) throw new Error("Error while loading the LIKES");
 
         const achievements = await response.json();
         const currentProject = achievements.find((proj) => proj.id === project.id);
 
         if (currentProject) {
           setLikes(currentProject.likes || 0);
-          setLiked(currentProject.liked || false); 
+          setLiked(currentProject.liked || false);
         }
       } catch (error) {
-        console.error("❌ Impossible de récupérer les likes :", error);
+        console.error("Impossible to get the LIKES :", error);
       }
     };
 
     fetchLikes();
-  }, [project.id]);
+  }, [project.id, BACKEND_URL]);
 
   const handleLike = async () => {
-    const action = liked ? "unlike" : "like"; 
+    const action = liked ? "unlike" : "like";
 
     try {
-      const response = await fetch(`http://localhost:5000/achievements/${project.id}/like`, {
+      const response = await fetch(`${BACKEND_URL}/achievements/${project.id}/like`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action }),
       });
 
-      if (!response.ok) throw new Error("Erreur lors de l'ajout du like");
+      if (!response.ok) throw new Error("Error while adding the LIKE");
 
       const data = await response.json();
-      setLikes(data.likes); 
-      setLiked(data.liked); 
+      setLikes(data.likes);
+      setLiked(data.liked);
     } catch (error) {
-      console.error("❌ Impossible de modifier le like :", error);
+      console.error("Updating LIKE impossible :", error);
     }
   };
 
@@ -85,9 +86,7 @@ const ProjectCard = ({ project, theme }) => {
 
         <p className="text-sm opacity-80">{project.description}</p>
 
-        <p className="text-sm opacity-80">
-            {new Date(project.created_at).toLocaleDateString()}
-        </p>
+        <p className="text-sm opacity-80">{new Date(project.created_at).toLocaleDateString()}</p>
 
         <div className="card-actions justify-end">
           <button onClick={() => navigate(`/achievements/${project.id}`)} className="btn glass">
