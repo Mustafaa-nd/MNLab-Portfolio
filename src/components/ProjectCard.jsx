@@ -58,7 +58,11 @@ const ProjectCard = ({ project, theme }) => {
       }`}
     >
       <figure className="relative">
-        <img src={project.img} alt={project.title} className="object-cover w-full h-56" />
+      <img
+        src={project.img_base64 ? `data:image/jpeg;base64,${project.img_base64}` : project.img}
+        alt={project.title}
+        className="object-cover w-full h-56"
+      />
       </figure>
 
       <div className="card-body relative">

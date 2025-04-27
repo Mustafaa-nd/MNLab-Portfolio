@@ -102,10 +102,11 @@ const AchievementDetails = () => {
       }`}>
         <div className="relative w-full overflow-hidden rounded-lg group">
           <img
-            src={project.img}
+            src={project.img_base64 ? `data:image/jpeg;base64,${project.img_base64}` : project.img}
             alt={project.title}
             className="w-full h-80 object-cover rounded-lg transform group-hover:scale-105 transition-all duration-300"
           />
+
         </div>
 
         {isEditing ? (
