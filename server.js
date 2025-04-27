@@ -3,29 +3,25 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import multer from "multer";
 import dotenv from "dotenv";
-import mysql from "mysql2/promise";
+import pkg from "pg"; // Utiliser PostgreSQL
 import path from "path";
 import fs from "fs";
-import pkg from 'pg';
 
-
-
-console.log("✅ Server file loaded, waiting for requests...");
+console.log("Server file loaded, waiting for requests...");
 
 dotenv.config();
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000; //important pour Render !
 
-
-// Secure CORS setup
+// Secure CORS
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: "*", // en production je peux préciser mon domaine
   credentials: true,
 }));
 
 app.use(bodyParser.json());
 
-// Connexion MySQL
+// PostgreSQL connection
 const { Pool } = pkg;
 const db = new Pool({
   host: process.env.DB_HOST,
@@ -33,13 +29,14 @@ const db = new Pool({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   port: process.env.DB_PORT,
-  ssl: { rejectUnauthorized: false } // Render
+  ssl: { rejectUnauthorized: false },
 });
-// Dossier upload
+
+// Upload folder
 const uploadDir = "./uploads";
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
-  console.log("📂 Dossier 'uploads' créé avec succès !");
+  console.log(" 'uploads' folder created successfully!");
 }
 
 // Upload config
@@ -51,89 +48,83 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-
-// ✅ GET achievements avec filtres
+// GET achievements with filters
 app.get("/achievements", async (req, res) => {
   const { category, search } = req.query;
   try {
     let query = "SELECT * FROM achievements";
     const values = [];
+    let idx = 1;
 
     if (category || search) {
       query += " WHERE";
       if (category) {
-        query += " LOWER(category) = $1";
+        query += ` LOWER(category) = $${idx++}`;
         values.push(category.trim().toLowerCase());
       }
       if (search) {
         if (category) query += " AND";
-        query += " (LOWER(title) LIKE $2 OR LOWER(description) LIKE $2 OR LOWER(category) LIKE $2)";
+        query += ` (LOWER(title) LIKE $${idx} OR LOWER(description) LIKE $${idx} OR LOWER(category) LIKE $${idx})`;
         const term = `%${search.trim().toLowerCase()}%`;
-        values.push(term, term, term);
+        values.push(term);
       }
     }
 
     query += " ORDER BY created_at DESC";
 
     const result = await db.query(query, values);
-    const rows = result.rows;
-
-    res.json(rows);
+    res.json(result.rows);
   } catch (err) {
-    console.error("🔥 Detailed SQL Error:", err.message);
+    console.error("Error GET achievements:", err.message);
     res.status(500).json({ error: err.message });
   }
 });
 
-
-
-// ✅ POST - Ajouter un achievement
+// POST - Add an achievement
 app.post("/achievements", upload.single("image"), async (req, res) => {
   const { title, description, category } = req.body;
   const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
 
   try {
-    const [result] = await db.query(
-      "INSERT INTO achievements (id, title, description, category, img) VALUES (?, ?, ?, ?, ?)",
-      [Date.now(), title, description, category || "Other", imagePath]
+    const result = await db.query(
+      "INSERT INTO achievements (id, title, description, category, img, likes, liked, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, NOW()) RETURNING id",
+      [Date.now(), title, description, category || "Other", imagePath, 0, false]
     );
-    res.status(201).json({ message: "Réalisation ajoutée avec succès", id: result.insertId });
+    res.status(201).json({ message: "Achievement added successfully", id: result.rows[0].id });
   } catch (err) {
-    console.error("Erreur POST:", err);
-    res.status(500).json({ error: "Erreur lors de l'ajout du projet" });
+    console.error("Error POST:", err.message);
+    res.status(500).json({ error: "Error adding project" });
   }
 });
 
-// ✅ PUT - Modifier un achievement
+// PUT - Edit an achievement
 app.put("/achievements/:id", async (req, res) => {
   const { id } = req.params;
   const { title, description, category } = req.body;
 
   try {
-    const [result] = await db.query(
-      "UPDATE achievements SET title = ?, description = ?, category = ? WHERE id = ?",
+    const result = await db.query(
+      "UPDATE achievements SET title = $1, description = $2, category = $3 WHERE id = $4",
       [title, description, category, id]
     );
-    if (result.affectedRows === 0)
-      return res.status(404).json({ error: "Projet non trouvé" });
-    res.json({ message: "Projet modifié avec succès" });
+    if (result.rowCount === 0) return res.status(404).json({ error: "Project not found" });
+    res.json({ message: "Project updated successfully" });
   } catch (err) {
-    console.error("Erreur PUT:", err);
-    res.status(500).json({ error: "Erreur lors de la modification" });
+    console.error("Error PUT:", err.message);
+    res.status(500).json({ error: "Error updating project" });
   }
 });
 
-// ✅ PUT - Like/unlike
+// PUT - Like/Unlike
 app.put("/achievements/:id/like", async (req, res) => {
   const { id } = req.params;
   const { action } = req.body;
 
   try {
-    const [rows] = await db.query("SELECT likes FROM achievements WHERE id = ?", [id]);
-    if (rows.length === 0)
-      return res.status(404).json({ error: "Projet non trouvé" });
+    const result = await db.query("SELECT likes FROM achievements WHERE id = $1", [id]);
+    if (result.rows.length === 0) return res.status(404).json({ error: "Project not found" });
 
-    let likes = rows[0].likes;
+    let likes = result.rows[0].likes;
     let liked = false;
 
     if (action === "like") {
@@ -144,70 +135,69 @@ app.put("/achievements/:id/like", async (req, res) => {
       liked = false;
     }
 
-    await db.query("UPDATE achievements SET likes = ?, liked = ? WHERE id = ?", [likes, liked, id]);
-    res.json({ message: `Like ${action} réussi`, likes, liked });
+    await db.query("UPDATE achievements SET likes = $1, liked = $2 WHERE id = $3", [likes, liked, id]);
+    res.json({ message: `Like ${action} successful`, likes, liked });
   } catch (err) {
-    console.error("Erreur LIKE:", err);
-    res.status(500).json({ error: "Erreur lors du traitement du like" });
+    console.error("Error LIKE:", err.message);
+    res.status(500).json({ error: "Error processing like" });
   }
 });
 
-// ✅ DELETE - Supprimer un achievement
+// DELETE - Delete an achievement
 app.delete("/achievements/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
-    const [result] = await db.query("DELETE FROM achievements WHERE id = ?", [id]);
-    if (result.affectedRows === 0)
-      return res.status(404).json({ error: "Projet non trouvé" });
+    const result = await db.query("DELETE FROM achievements WHERE id = $1", [id]);
+    if (result.rowCount === 0) return res.status(404).json({ error: "Project not found" });
 
-    res.json({ message: "Projet supprimé avec succès" });
+    res.json({ message: "Project deleted successfully" });
   } catch (err) {
-    console.error("Erreur DELETE:", err);
-    res.status(500).json({ error: "Erreur lors de la suppression" });
+    console.error("Error DELETE:", err.message);
+    res.status(500).json({ error: "Error deleting project" });
   }
 });
 
-
+// GET - Categories
 app.get("/categories", async (req, res) => {
   try {
-    const [rows] = await db.query("SELECT DISTINCT category FROM achievements ORDER BY category ASC");
-    const categories = rows.map((row) => row.category);
+    const result = await db.query("SELECT DISTINCT category FROM achievements ORDER BY category ASC");
+    const categories = result.rows.map(row => row.category);
     res.json(categories);
   } catch (err) {
-    console.error("Erreur GET /categories:", err);
-    res.status(500).json({ error: "Erreur lors du chargement des catégories" });
+    console.error("Error GET /categories:", err.message);
+    res.status(500).json({ error: "Error loading categories" });
   }
 });
 
-// ✅ D'abord route fixe
+// GET - Recent achievements
 app.get("/achievements/recent", async (req, res) => {
   try {
-    const [rows] = await db.query("SELECT * FROM achievements ORDER BY id DESC LIMIT 3");
-    res.json(rows);
+    const result = await db.query("SELECT * FROM achievements ORDER BY created_at DESC LIMIT 3");
+    res.json(result.rows);
   } catch (err) {
-    console.error("Erreur /achievements/recent:", err);
+    console.error("Error /achievements/recent:", err.message);
     res.status(500).json({ error: "Server issue" });
   }
 });
 
-// ✅ Ensuite seulement route paramétrée
+// GET - Specific achievement by ID
 app.get("/achievements/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const [rows] = await db.query("SELECT * FROM achievements WHERE id = ?", [id]);
-    if (rows.length === 0) return res.status(404).json({ error: "Project Not Found" });
-    res.json(rows[0]);
+    const result = await db.query("SELECT * FROM achievements WHERE id = $1", [id]);
+    if (result.rows.length === 0) return res.status(404).json({ error: "Project not found" });
+    res.json(result.rows[0]);
   } catch (err) {
-    console.error("Erreur GET:id:", err);
+    console.error("Error GET id:", err.message);
     res.status(500).json({ error: "Server issue" });
   }
 });
 
+// Static uploads
 app.use("/uploads", express.static("uploads"));
 
-
-// ✅ Lancer serveur
+// Start server
 app.listen(PORT, () => {
-  console.log(`✅ Serveur backend lancé sur http://localhost:${PORT}`);
+  console.log(`Backend server running...`);
 });
