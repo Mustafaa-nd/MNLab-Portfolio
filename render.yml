@@ -1,7 +1,0 @@
-services:
-  - name: mnlab-backend
-    env: node
-    buildCommand: "npm install"
-    startCommand: "node server.js"
-    rootDir: "."
-    autoDeploy: true
