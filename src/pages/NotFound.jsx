@@ -18,9 +18,11 @@ const NotFound = () => {
       theme === "dark" ? "bg-gray-800 text-white" : "bg-gray-200 text-gray-900"
     }`}>
       <h1 className="text-6xl font-bold text-green-500 mb-4">404</h1>
-      <h2 className="text-2xl font-semibold mb-4">Yo! My laboratory doesn't have this page</h2>
+      <h2 className="text-2xl font-semibold mb-4">Yo! I don't have that page</h2>
       <p className="text-lg opacity-75 mb-6">
-        The page you're looking for doesn't exist or has been moved.
+        The page you're looking for doesn't exist or has been moved. 
+        <br />
+        Feel free to reach out if you're looking for something specific!
       </p>
       <Link
         to="/"
