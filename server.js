@@ -62,26 +62,29 @@ app.get("/achievements", async (req, res) => {
     if (category || search) {
       query += " WHERE";
       if (category) {
-        query += " LOWER(category) = ?";
+        query += " LOWER(category) = $1";
         values.push(category.trim().toLowerCase());
       }
       if (search) {
         if (category) query += " AND";
-        query += " (LOWER(title) LIKE ? OR LOWER(description) LIKE ? OR LOWER(category) LIKE ?)";
+        query += " (LOWER(title) LIKE $2 OR LOWER(description) LIKE $2 OR LOWER(category) LIKE $2)";
         const term = `%${search.trim().toLowerCase()}%`;
         values.push(term, term, term);
       }
     }
 
-    query += " ORDER BY created_at DESC"; 
+    query += " ORDER BY created_at DESC";
 
-    const [rows] = await db.query(query, values);
+    const result = await db.query(query, values);
+    const rows = result.rows;
+
     res.json(rows);
   } catch (err) {
-    console.error("Detailed SQL Error:", err.message);
+    console.error("🔥 Detailed SQL Error:", err.message);
     res.status(500).json({ error: err.message });
   }
 });
+
 
 
 // ✅ POST - Ajouter un achievement
