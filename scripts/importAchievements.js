@@ -46,10 +46,10 @@ const importAchievements = async () => {
       );
     }
 
-    console.log("✅ Achievements importés avec succès dans MySQL.");
+    console.log("Achievements importés avec succès dans MySQL.");
     process.exit(0);
   } catch (err) {
-    console.error("❌ Erreur lors de l'import :", err);
+    console.error("Erreur lors de l'import :", err);
     process.exit(1);
   }
 };
