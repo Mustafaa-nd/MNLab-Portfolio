@@ -99,13 +99,17 @@ const Home = () => {
 
       {/* Achievements Section */}
       <section className={`relative z-20 text-center p-12 md:p-20 ${theme === "dark" ? "bg-gray-800 text-gray-300" : "bg-gray-100 text-gray-900"}`}>
-        <h2 className="text-5xl font-bold mb-8 text-green-700">Some of my Achievements</h2>
+        <h2 className="text-5xl font-bold mb-8 text-green-700">My most recent projects</h2>
 
+        {achievementsData.length === 0 ? (
+        <p className="text-center text-lg">Loading projects...</p>
+      ) : (
         <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-8">
           {achievementsData.slice(0, 3).map((project, index) => (
             <ProjectCard key={index} project={project} theme={theme} />
           ))}
         </div>
+      )}
 
         <div className="mt-8">
           <Link to="/achievements">

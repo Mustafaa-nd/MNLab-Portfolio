@@ -86,7 +86,7 @@ const Achievements = () => {
       </div>
 
       {achievementsData.length === 0 ? (
-        <p className="text-center text-lg">No projects found...</p>
+        <p className="text-center text-lg">Loading projects...</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {achievementsData.map((project, index) => (
