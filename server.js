@@ -73,13 +73,13 @@ app.get("/achievements", async (req, res) => {
       }
     }
 
-    query += " ORDER BY created_at DESC"; // 🔥 Ajouter ORDER BY uniquement à la fin
+    query += " ORDER BY created_at DESC"; 
 
     const [rows] = await db.query(query, values);
     res.json(rows);
   } catch (err) {
-    console.error("Erreur GET:", err);
-    res.status(500).json({ error: "Erreur lors du chargement des données" });
+    console.error("Detailed SQL Error:", err.message);
+    res.status(500).json({ error: err.message });
   }
 });
 
