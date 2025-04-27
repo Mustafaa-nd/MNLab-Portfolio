@@ -6,12 +6,16 @@ import dotenv from "dotenv";
 import mysql from "mysql2/promise";
 import path from "path";
 import fs from "fs";
+import pkg from 'pg';
+
+
 
 console.log("✅ Server file loaded, waiting for requests...");
 
 dotenv.config();
 const app = express();
 const PORT = 5000;
+
 
 // Secure CORS setup
 app.use(cors({
@@ -22,13 +26,15 @@ app.use(cors({
 app.use(bodyParser.json());
 
 // Connexion MySQL
-const db = await mysql.createPool({
+const { Pool } = pkg;
+const db = new Pool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
+  port: process.env.DB_PORT,
+  ssl: { rejectUnauthorized: false } // Render
 });
-
 // Dossier upload
 const uploadDir = "./uploads";
 if (!fs.existsSync(uploadDir)) {
