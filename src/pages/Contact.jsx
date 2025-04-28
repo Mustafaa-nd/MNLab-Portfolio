@@ -43,7 +43,7 @@ const Contact = () => {
       import.meta.env.VITE_EMAILJS_PUBLIC_KEY
     )
     .then(() => {
-      setSuccess("Your message has been successfully sent to Mustafaa!");
+      setSuccess("Your message has been successfully sent to Mustafaa.");
       setName("");
       setEmail("");
       setMessage("");
