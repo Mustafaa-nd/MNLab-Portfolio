@@ -73,7 +73,7 @@ const Contact = () => {
         theme === "dark" ? "bg-gray-800 border border-gray-700" : "bg-white border border-gray-300"
       }`}>
         <h2 className="text-3xl font-bold text-center text-green-600 mb-6">
-          Get in Touch!
+          Let's get in Touch!
         </h2>
 
         {error && <p className="text-red-500 bg-red-100 p-2 text-center rounded">{error}</p>}
@@ -126,7 +126,7 @@ const Contact = () => {
             type="submit"
             className="w-full py-3 rounded-lg font-semibold shadow-md bg-green-700 text-white hover:bg-green-800 transition-all duration-300"
           >
-            Send Message
+            Send it to me
           </button>
         </form>
 
