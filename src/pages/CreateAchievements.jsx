@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { PlusCircle } from "lucide-react";
 import { useAuth } from "../AuthContext";
+import { motion } from "framer-motion";
+
 
 const CreateAchievements = () => {
   const { user } = useAuth();
@@ -83,9 +85,12 @@ const CreateAchievements = () => {
   };
 
   return (
-    <div className={`mt-20 min-h-screen flex items-center justify-center p-8 transition-colors duration-300 ${
+    <motion.div className={`mt-20 min-h-screen flex items-center justify-center p-8 transition-colors duration-300 ${
       theme === "dark" ? "bg-gray-800 text-white" : "bg-gray-200 text-gray-900"
-    }`}>
+    }`}
+    initial={{ scale: 0.95, opacity: 0 }}
+    animate={{ scale: 1, opacity: 1 }}
+    transition={{ duration: 0.6 }}>
       <div className={`rounded-2xl shadow-2xl p-8 transition-transform will-change-transform text-center border ${
         theme === "dark" ? "bg-gray-900 border-green-500 shadow-green-500/50" : "bg-gray-500 border-green-500 shadow-green-300/50"
       }`}>
@@ -97,12 +102,29 @@ const CreateAchievements = () => {
           </ul>
         </div>
 
-        <h1 className="text-4xl font-extrabold mb-4 uppercase tracking-wide text-green-400">
+        <motion.h1 className="text-4xl font-extrabold mb-4 uppercase tracking-wide text-green-400"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}>
           Add an Achievement
-        </h1>
+        </motion.h1>
 
-        <form onSubmit={handleSubmit} className="mb-6 flex flex-col items-center gap-3">
-          <input
+        <motion.form 
+          onSubmit={handleSubmit} 
+          className="mb-6 flex flex-col items-center gap-3"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.2,
+                delayChildren: 0.3,
+              },
+            },
+          }}>
+          <motion.input
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -110,7 +132,8 @@ const CreateAchievements = () => {
             className="w-full max-w-md px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 placeholder-gray-500"
             required
           />
-          <textarea
+          <motion.textarea
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Describe your project"
@@ -119,7 +142,8 @@ const CreateAchievements = () => {
           />
 
           <h5>Please select a category</h5>
-          <select
+          <motion.select
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             className="w-full max-w-md px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 placeholder-gray-500"
@@ -133,10 +157,11 @@ const CreateAchievements = () => {
                 </option>
               ))
             )}
-          </select>
+          </motion.select>
 
           <h5>Please upload a picture for your project</h5>
-          <input
+          <motion.input
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
             type="file"
             accept="image/*"
             onChange={handleFileChange}
@@ -145,19 +170,22 @@ const CreateAchievements = () => {
           />
 
           {preview && (
-            <img src={preview} alt="Preview" className="w-40 h-40 mt-4 rounded-lg shadow-md" />
+            <motion.img 
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+            src={preview} alt="Preview" className="w-40 h-40 mt-4 rounded-lg shadow-md" />
           )}
 
-          <button
+          <motion.button
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
             type="submit"
             className="w-auto px-6 py-3 rounded-lg flex items-center gap-2 shadow-md transition-all bg-green-500 hover:bg-green-600 text-white"
           >
             <PlusCircle size={20} />
             Add
-          </button>
-        </form>
+          </motion.button>
+        </motion.form>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
