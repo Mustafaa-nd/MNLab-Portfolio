@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../AuthContext"; 
+import { useAuth } from "../AuthContext";
 
 const Navbar = () => {
-  const { user, logout } = useAuth(); 
+  const { user, logout } = useAuth();
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
   const [lastScrollY, setLastScrollY] = useState(0);
   const [showNavbar, setShowNavbar] = useState(true);
@@ -37,50 +37,83 @@ const Navbar = () => {
         showNavbar ? "translate-y-0" : "-translate-y-full"
       } ${theme === "dark" ? "bg-gray-900 text-green-600" : "bg-white text-green-900"} shadow-md`}
     >
-      <div className="navbar">
-        <div className="navbar-start pl-10">
+      <div className="navbar px-4">
+        {/* Left: Logo */}
+        <div className="navbar-start">
           <Link to="/" className="normal-case text-xl flex items-center">
-            <img 
-              src={theme === "dark" ? "/images/MustaCore-dark.png" : "/images/MustaCore-light.png"} 
-              alt="MustaCore_logo" 
-              className="w-20 h-20 object-cover rounded-full aspect-square" 
+            <img
+              src={theme === "dark" ? "/images/MustaCore-dark.png" : "/images/MustaCore-light.png"}
+              alt="MustaCore_logo"
+              className="w-16 h-16 object-cover rounded-full aspect-square"
             />
           </Link>
         </div>
 
+        {/* Center: Desktop menu */}
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/studies">Studies</Link>
-            </li>
-            <li>
-              <Link to="/achievements">Achievements</Link>
-            </li>
-            <li>
-              <Link to="/contact">Contact</Link>
-            </li>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/studies">Studies</Link></li>
+            <li><Link to="/achievements">Achievements</Link></li>
+            <li><Link to="/contact">Contact</Link></li>
           </ul>
         </div>
 
-        <div className="navbar-end flex gap-4">
+        {/* Right: Theme switch & Logout */}
+        <div className="navbar-end hidden lg:flex gap-4">
           {user && (
             <button onClick={logout} className="btn bg-red-500 text-white">
               Logout
             </button>
           )}
-
           <label className="swap swap-rotate">
             <input type="checkbox" onChange={toggleTheme} checked={theme === "dark"} />
+            {/* Light theme icon */}
             <svg className="swap-off fill-current w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <path d="M5.64 17l-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17zm-1.64-5a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1zm7-7a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1zm-6.36 2.05a1 1 0 0 0 .7.29 1 1 0 0 0 .71-.29 1 1 0 0 0 0-1.41L4.93 4.93a1 1 0 0 0-1.41 1.41zM17.66 7.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29zM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2zm-9 8a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1zm6.36-2a1 1 0 0 0-.7.29l-.71.71a1 1 0 0 0 1.41 1.41l.71-.71a1 1 0 0 0-.71-1.71zm-6.36-9.5a5.5 5.5 0 1 0 5.5 5.5 5.5 5.5 0 0 0-5.5-5.5zm0 9a3.5 3.5 0 1 1 3.5-3.5 3.5 3.5 0 0 1-3.5 3.5z" />
             </svg>
+
+            {/* Dark theme icon */}
             <svg className="swap-on fill-current w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <path d="M21.64 13a1 1 0 0 0-1.05-.14 8.06 8.06 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.15 8.6 8.6 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-.74zm-9.5 6.69A8.15 8.15 0 0 1 7.08 5.22v.27A10.15 10.15 0 0 0 17.22 15.63a9.79 9.79 0 0 0 2.1-.22 8.12 8.12 0 0 1-7.18 4.28z" />
             </svg>
+
           </label>
+
+        </div>
+
+        {/* Mobile menu */}
+        <div className="lg:hidden dropdown dropdown-end">
+          <label tabIndex={0} className="btn btn-ghost">
+            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </label>
+          <ul
+            tabIndex={0}
+            className={`menu menu-sm dropdown-content mt-3 p-2 shadow rounded-box w-52 ${
+              theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-gray-900"
+            }`}
+          >
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/studies">Studies</Link></li>
+            <li><Link to="/achievements">Achievements</Link></li>
+            <li><Link to="/contact">Contact</Link></li>
+            {user && (
+              <li><button onClick={logout} className="text-red-600">Logout</button></li>
+            )}
+            <li>
+              <label className="swap swap-rotate">
+                <input type="checkbox" onChange={toggleTheme} checked={theme === "dark"} />
+                <svg className="swap-off fill-current w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path d="M5.64 17l-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17zm-1.64-5a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1zm7-7a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1zm-6.36 2.05a1 1 0 0 0 .7.29 1 1 0 0 0 .71-.29 1 1 0 0 0 0-1.41L4.93 4.93a1 1 0 0 0-1.41 1.41zM17.66 7.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29zM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2zm-9 8a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1zm6.36-2a1 1 0 0 0-.7.29l-.71.71a1 1 0 0 0 1.41 1.41l.71-.71a1 1 0 0 0-.71-1.71zm-6.36-9.5a5.5 5.5 0 1 0 5.5 5.5 5.5 5.5 0 0 0-5.5-5.5zm0 9a3.5 3.5 0 1 1 3.5-3.5 3.5 3.5 0 0 1-3.5 3.5z" />
+                </svg>
+                <svg className="swap-on fill-current w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path d="M21.64 13a1 1 0 0 0-1.05-.14 8.06 8.06 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.15 8.6 8.6 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-.74zm-9.5 6.69A8.15 8.15 0 0 1 7.08 5.22v.27A10.15 10.15 0 0 0 17.22 15.63a9.79 9.79 0 0 0 2.1-.22 8.12 8.12 0 0 1-7.18 4.28z" />
+                </svg>
+              </label>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
