@@ -13,8 +13,9 @@ const PORT = process.env.PORT || 5000;
 
 // Secure CORS
 app.use(cors({
-  origin: "*",
-  credentials: true,
+  origin: 'https://mustafaa-portfolio.vercel.app',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
 }));
 
 app.use(bodyParser.json());
