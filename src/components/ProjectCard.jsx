@@ -86,7 +86,7 @@ const ProjectCard = ({ project, theme }) => {
           </span>
         )}
 
-        <h2 className="card-title mt-2">{project.title}</h2>
+        <h2 className="card-title mt-2 center">{project.title}</h2>
 
         <p className="text-sm opacity-80">{project.description}</p>
 
